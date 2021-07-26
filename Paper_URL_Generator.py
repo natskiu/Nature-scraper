@@ -1,6 +1,9 @@
 # This is to extract paper url, title, publish date from the Nature search engine
-import random, time, requests
+import random
+import requests
+import time
 from bs4 import BeautifulSoup
+
 
 def url_html(url):
     headers = {
@@ -9,6 +12,7 @@ def url_html(url):
     response = requests.get(url, headers=headers)
     html_content = BeautifulSoup(response.text, 'html.parser')
     return html_content
+
 
 def main():
     start_url = input('Enter the URL of the first page of the search')
