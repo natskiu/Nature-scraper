@@ -1,0 +1,2 @@
+python Paper_URL_Generator.py --start_url "https://www.nature.com/search?q=battery%20dendrite&journal=nenergy&date_range=2015-2021&order=relevance" --depth 2 --filename_data_url tmp/data_url.txt --filename_paper_url tmp/paper_url.txt
+# python Paper_URL_Generator.py --start_url "https://www.nature.com/search?q=battery%20dendrite&journal=nenergy&date_range=2015-2021&order=relevance" --depth 2 --filename_data_url tmp/data_url.txt --filename_paper_url tmp/paper_url.txt
