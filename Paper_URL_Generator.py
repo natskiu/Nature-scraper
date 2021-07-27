@@ -29,7 +29,7 @@ def paper_url_generator(start_url, depth, filename):
     url_list = []
     for i in range(depth):
         try:
-            url = start_url + "&p=" + str(i + 1)
+            url = start_url + "&page=" + str(i + 1)
             html_content = url_html(url)
             article_list = html_content.find_all(
                 "li", class_="app-article-list-row__item"
