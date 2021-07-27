@@ -4,7 +4,6 @@ import random
 import time
 import requests
 from bs4 import BeautifulSoup
-
 # from typing import List
 from multiprocessing import Pool  # This is a process-based Pool
 from multiprocessing import cpu_count
@@ -114,4 +113,8 @@ def is_valid_dataset(dataset_url):
 
 
 if __name__ == "__main__":
-    fire.Fire(main)
+    url = 'https://www.nature.com/search?q=%27thermal%20runaway%27&article_type=research&date_range=last_5_years&order=relevance&title=%27lithium-ion%20battery%27'
+    depth = 1
+    fdu = 'data_link_thermalrunaway.txt'
+    fpu = 'url_thermalrunaway.txt'
+    main(url, depth, fdu, fpu)
