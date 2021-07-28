@@ -10,7 +10,7 @@ from multiprocessing import cpu_count
 import fire
 import pandas as pd
 import numpy as np
-
+import csv
 
 def url_html(url):
     headers = {
@@ -25,7 +25,9 @@ def paper_url_generator(start_url, depth, filename):
     # start_url = input('Enter the URL of the first page of the search')
     # depth = int(input('Enter the number of pages of result'))
     domain = "http://www.nature.com"
+    title_list = []
     url_list = []
+    list_for_csv = []
     for i in range(depth):
         try:
             url = start_url + "&page=" + str(i + 1)
@@ -37,9 +39,11 @@ def paper_url_generator(start_url, depth, filename):
             for article in article_list:
                 tag_a = article.find("a")
                 paper_url = domain + tag_a["href"]
-                # title = tag_a.text.strip()
+                title = tag_a.text.strip()
                 # date = article.find('time', class_="c-meta__item c-meta__item--block-at-lg").text.strip()
                 url_list.append(paper_url)
+                title_list.append(title)
+                list_for_csv.append([title, paper_url])
 
             print("Successfully scraped page" + str(i + 1))
             time.sleep(random.randint(1, 3))
@@ -47,11 +51,12 @@ def paper_url_generator(start_url, depth, filename):
         except:
             print("Failed to scrape page" + str(i + 1))
             continue
-
+    title_and_url_list = [title_list, url_list]
     with open(filename, "w") as f:
-        for url in url_list:
-            f.write(url + "\n")
-    return url_list
+        writer = csv.writer(f, delimiter=",")
+        for row in list_for_csv:
+            writer.writerows(row)
+    return title_and_url_list
 
 
 def data_finder(paper_url: str):
@@ -72,7 +77,9 @@ def data_finder(paper_url: str):
 
 def main(start_url: str, depth: str, filename_data_url: str, filename_paper_url: str):
     start_time = time.time()
-    paper_url_list = paper_url_generator(start_url, depth, filename_paper_url)
+    title_and_url_list = paper_url_generator(start_url, depth, filename_paper_url)
+    title_list = title_and_url_list[0]
+    paper_url_list = title_and_url_list[1]
 
     print("--- %s seconds to get a list of paper urls ---" % (time.time() - start_time))
     start_time = time.time()
@@ -88,12 +95,12 @@ def main(start_url: str, depth: str, filename_data_url: str, filename_paper_url:
         for link in [link for link in data_url_list]:
             # for link in [link for link in data_url_list if link.startswith('http')]:
             f.write(link + "\n")
-    save_results_as_table(paper_url_list, data_url_list)
+    save_results_as_table(title_list, paper_url_list, data_url_list)
 
 
-def save_results_as_table(paper_url_list, data_url_list):
-    df_result = pd.DataFrame(
-        {"paper_urls": paper_url_list, "dataset_urls": data_url_list}
+def save_results_as_table(title_list, paper_url_list, data_url_list):
+    df_result = pd.DataFrame( 
+        {"title": title_list,"paper_urls": paper_url_list, "dataset_urls": data_url_list}
     )
     df_result['dataset_type'] = df_result['dataset_urls'].apply(is_valid_dataset)
     df_result.replace({' ':np.nan}, inplace = True)

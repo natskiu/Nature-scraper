@@ -17,10 +17,8 @@ def main(path: str,output_csv_filename: str ):
         li.append(df)
 
     frame = pd.concat(li, axis=0, ignore_index=True)
-    #print('The number of entries is',len(frame))
     desired_df = frame[frame['dataset_type'] == 'external_data']
-    #print('The number of desired result is', len(desired_result))
-    #print(desired_result['paper_urls'].unique)
+    desired_df = desired_df.drop_duplicates()
     desired_df.to_csv(output_csv_filename, index = False)
 
 if __name__ == "__main__":
